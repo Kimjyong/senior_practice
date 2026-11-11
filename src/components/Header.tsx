@@ -66,43 +66,43 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Text Size Switcher */}
           <div
-            className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-300"
+            className="flex items-center bg-slate-100 p-1 rounded-2xl border-2 border-slate-300 shadow-inner"
             role="group"
             aria-label="글씨 크기 조절"
           >
-            <span className="px-2 text-xs font-bold text-slate-600 hidden md:inline flex items-center gap-1">
-              <Type className="w-3.5 h-3.5" /> 글씨
+            <span className="px-2 text-xs font-black text-slate-700 hidden lg:inline flex items-center gap-1">
+              <Type className="w-4 h-4 text-slate-800" /> 글씨
             </span>
             <button
               onClick={() => onChangeFontSize('normal')}
-              className={`px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-bold transition-all ${
+              className={`px-3 py-2 rounded-xl text-sm font-black transition-all ${
                 fontSize === 'normal'
-                  ? 'bg-blue-700 text-white shadow-sm'
+                  ? 'bg-blue-700 text-white shadow-md ring-2 ring-blue-400 scale-[1.02]'
                   : 'text-slate-700 hover:bg-white/80'
               }`}
-              title="보통 글씨 (20px 기준)"
+              title="보통 글씨 (기본 크기)"
             >
               보통
             </button>
             <button
               onClick={() => onChangeFontSize('large')}
-              className={`px-2.5 py-1.5 rounded-lg text-sm md:text-base font-bold transition-all ${
+              className={`px-3 py-2 rounded-xl text-sm font-black transition-all ${
                 fontSize === 'large'
-                  ? 'bg-blue-700 text-white shadow-sm'
+                  ? 'bg-blue-700 text-white shadow-md ring-2 ring-blue-400 scale-[1.02]'
                   : 'text-slate-700 hover:bg-white/80'
               }`}
-              title="큰 글씨 (24px 기준)"
+              title="큰 글씨 (25% 확대)"
             >
               크게
             </button>
             <button
               onClick={() => onChangeFontSize('xlarge')}
-              className={`px-2.5 py-1.5 rounded-lg text-base md:text-lg font-black transition-all ${
+              className={`px-3 py-2 rounded-xl text-sm font-black transition-all ${
                 fontSize === 'xlarge'
-                  ? 'bg-blue-700 text-white shadow-sm'
+                  ? 'bg-blue-700 text-white shadow-md ring-2 ring-blue-400 scale-[1.02]'
                   : 'text-slate-700 hover:bg-white/80'
               }`}
-              title="아주 큰 글씨 (28px 기준)"
+              title="가장 크게 (50% 확대)"
             >
               가장 크게
             </button>

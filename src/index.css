@@ -8,6 +8,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Senior-Friendly Dynamic Root Font Scaling */
+html {
+  font-size: 16px;
+  transition: font-size 0.2s ease-in-out;
+}
+
+html[data-font-size="normal"] {
+  font-size: 16px;
+}
+
+html[data-font-size="large"] {
+  font-size: 20px; /* Noticeable 125% zoom for all rem-based typography */
+}
+
+html[data-font-size="xlarge"] {
+  font-size: 24px; /* Dramatic 150% zoom for low-vision seniors */
+}
+
 /* Ensure focus states are extra visible for seniors */
 :focus-visible {
   outline: 3px solid #2563eb;

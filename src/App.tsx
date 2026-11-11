@@ -29,25 +29,63 @@ import { speechHelper } from './utils/speech';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
-  const [fontSize, setFontSize] = useState<FontSizeLevel>('normal');
-  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
-  const [selectedCourse, setSelectedCourse] = useState<LearningCourse>(LEARNING_COURSES[0]);
-
-  // Track completed tasks (defaults with 1 completed or empty, user earns stamps)
-  const [completedTasks, setCompletedTasks] = useState<string[]>(() => {
+  const [fontSize, setFontSize] = useState<FontSizeLevel>(() => {
     try {
-      const saved = localStorage.getItem('senior_completed_tasks');
-      if (saved) return JSON.parse(saved);
+      const saved = localStorage.getItem('senior_font_size');
+      if (saved === 'normal' || saved === 'large' || saved === 'xlarge') return saved;
     } catch {
       // ignore
     }
-    return ['kakaotalk']; // Starter initial completed stamp to encourage them
+    return 'normal';
+  });
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [selectedCourse, setSelectedCourse] = useState<LearningCourse>(LEARNING_COURSES[0]);
+
+  // Track completed tasks (starts completely empty so user starts with '배우기 시작')
+  const [completedTasks, setCompletedTasks] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('senior_completed_tasks');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Clear legacy single-item kakaotalk default if present
+        if (Array.isArray(parsed) && parsed.length === 1 && parsed[0] === 'kakaotalk') {
+          return [];
+        }
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // ignore
+    }
+    return [];
   });
 
   // Practice results
   const [hospitalData, setHospitalData] = useState<HospitalReservationData | null>(null);
   const [trainData, setTrainData] = useState<TrainBookingData | null>(null);
   const [kioskData, setKioskData] = useState<KioskOrderData | null>(null);
+
+  // Apply root font-size attribute to html element so all rem-based sizes scale
+  useEffect(() => {
+    document.documentElement.setAttribute('data-font-size', fontSize);
+    try {
+      localStorage.setItem('senior_font_size', fontSize);
+    } catch {
+      // ignore
+    }
+  }, [fontSize]);
+
+  const handleChangeFontSize = (level: FontSizeLevel) => {
+    setFontSize(level);
+    if (soundEnabled) {
+      if (level === 'large') {
+        speechHelper.speak('글자 크기를 크게 설정했습니다.');
+      } else if (level === 'xlarge') {
+        speechHelper.speak('글자 크기를 가장 크게 설정했습니다.');
+      } else {
+        speechHelper.speak('글자 크기를 보통으로 설정했습니다.');
+      }
+    }
+  };
 
   // Sync completed tasks to localStorage
   useEffect(() => {
@@ -98,22 +136,9 @@ export default function App() {
     handleNavigate('kiosk_result');
   };
 
-  // Font size class mapping ensuring >= 20px body font as PRD requires
-  const getFontSizeClass = () => {
-    switch (fontSize) {
-      case 'large':
-        return 'text-[22px] sm:text-[24px]';
-      case 'xlarge':
-        return 'text-[26px] sm:text-[28px]';
-      case 'normal':
-      default:
-        return 'text-[19px] sm:text-[21px]';
-    }
-  };
-
   return (
     <div
-      className={`min-h-screen bg-slate-100/70 text-slate-900 flex flex-col justify-between selection:bg-blue-200 selection:text-blue-900 ${getFontSizeClass()}`}
+      className="min-h-screen bg-slate-100/70 text-slate-900 flex flex-col justify-between selection:bg-blue-200 selection:text-blue-900"
     >
       <div>
         {/* Senior Accessible Navigation Bar */}
@@ -121,7 +146,7 @@ export default function App() {
           currentScreen={currentScreen}
           onNavigate={handleNavigate}
           fontSize={fontSize}
-          onChangeFontSize={setFontSize}
+          onChangeFontSize={handleChangeFontSize}
           soundEnabled={soundEnabled}
           onToggleSound={() => {
             if (soundEnabled) {
