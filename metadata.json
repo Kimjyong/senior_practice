@@ -1,0 +1,6 @@
+{
+  "name": "어르신 디지털 생활 도우미",
+  "description": "실수와 결제 두려움 없는 시니어 맞춤형 스마트폰 사용법 및 3대 생활 서비스(병원·기차·키오스크) 가상 실습 웹 플랫폼",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
